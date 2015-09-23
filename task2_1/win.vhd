@@ -31,6 +31,7 @@ signal spin_result_dozen : unsigned(1 downto 0);
 signal spin_result_color_order : unsigned(1 downto 0);
 BEGIN
 	-- Check for wins on bet 1 (straight-up).
+	-- TODO: check logic.
 	process(bet1_value, spin_result_latched)
 	begin
 		if (bet1_value = spin_result_latched) then
@@ -41,7 +42,7 @@ BEGIN
 	end process;
 	
 	-- Check for wins on bet 2 (red-black).
-	process(bet2, spin_result_latched, spin_result_color_order)
+	process(bet2_colour, spin_result_latched, spin_result_color_order)
 	begin
 		-- Based on the section, even numbers may be red or black.
 		if (spin_result_latched < 29) then
@@ -58,14 +59,31 @@ BEGIN
 			spin_result_color_order <= '0';
 		end if;
 		
+		-- TODO: Check logic.
+		-- TODO: Modulus in VHDL?
+		if ((spin_result_latched // 2) = 1) then
+			if (spin_result_color_order = bet2_colour) then
+				bet2_wins <= '1';
+			else
+				bet2_wins <= '0';
+			end if;
+		else
+			if (spin_result_color_order = bet2_colour) then
+				bet2_wins <= '0';
+			else
+				bet2_wins <= '1';
+			end if;
+		end if;
 		
 				
 	end process;
 	
 	-- Check for wins on bet 3 (dozen).
+	-- TODO: check logic.
 	process(bet3_dozen, spin_result_latched, spin_result_dozen)
 	begin
 		-- Determine which dozen contains the result.
+		-- TODO: Fix implied latch if result is 0
 		if (spin_result_latched < 24) then
 			if (spin_result_latched < 12) then
 				if (spin_result_latched > 0) then

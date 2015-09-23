@@ -13,3 +13,12 @@
 **/incremental_db/
 **/output_files/
 **/__Previews/
+
+## Ignore ModelSim files.
+*.dbs
+*.cr.mti
+*.mpf
+*.dat
+*.prw
+*.psm
+**/work/

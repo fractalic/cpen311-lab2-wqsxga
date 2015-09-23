@@ -28,7 +28,7 @@ ARCHITECTURE behavioural OF win IS
 signal spin_result_dozen : unsigned(1 downto 0);
 -- The quadrant range of the result
 -- determines red-black even-odd pairing.
-signal spin_result_color_order : unsigned(1 downto 0);
+signal spin_result_color_order : std_logic;
 BEGIN
 	-- Check for wins on bet 1 (straight-up).
 	-- TODO: check logic.
@@ -60,8 +60,7 @@ BEGIN
 		end if;
 		
 		-- TODO: Check logic.
-		-- TODO: Modulus in VHDL?
-		if ((spin_result_latched // 2) = 1) then
+		if ((spin_result_latched mod 2) = 1) then
 			if (spin_result_color_order = bet2_colour) then
 				bet2_wins <= '1';
 			else

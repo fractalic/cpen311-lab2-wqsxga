@@ -24,11 +24,14 @@ END win;
 
 
 ARCHITECTURE behavioural OF win IS
--- Store the dozen in which the result lies.
+-- The dozen in which the result lies.
 signal spin_result_dozen : unsigned(1 downto 0);
+-- The quadrant range of the result
+-- determines red-black even-odd pairing.
+signal spin_result_color_order : unsigned(1 downto 0);
 BEGIN
 	-- Check for wins on bet 1 (straight-up).
-	process(bet1_value)
+	process(bet1_value, spin_result_latched)
 	begin
 		if (bet1_value = spin_result_latched) then
 			bet1_wins <= '1';
@@ -37,8 +40,30 @@ BEGIN
 		end if;
 	end process;
 	
+	-- Check for wins on bet 2 (red-black).
+	process(bet2, spin_result_latched, spin_result_color_order)
+	begin
+		-- Based on the section, even numbers may be red or black.
+		if (spin_result_latched < 29) then
+			if (spin_result_latched < 19) then
+				if (spin_result_latched < 11) then
+					spin_result_color_order <= '1';
+				else
+					spin_result_color_order <= '0';
+				end if;
+			else
+				spin_result_color_order <= '1';
+			end if;
+		else
+			spin_result_color_order <= '0';
+		end if;
+		
+		
+				
+	end process;
+	
 	-- Check for wins on bet 3 (dozen).
-	process(bet3_dozen)
+	process(bet3_dozen, spin_result_latched, spin_result_dozen)
 	begin
 		-- Determine which dozen contains the result.
 		if (spin_result_latched < 24) then

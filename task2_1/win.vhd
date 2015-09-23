@@ -7,13 +7,8 @@ USE WORK.ALL;
 
 --------------------------------------------------------------
 --
---  This is a skeleton you can use for the win subblock.  This block determines
---  whether each of the 3 bets is a winner.  As described in the lab
---  handout, the first bet is a "straight-up" bet, teh second bet is 
---  a colour bet, and the third bet is a "dozen" bet.
---
---  This should be a purely combinational block.  There is no clock.
---  Remember the rules associated with Pattern 1 in the lectures.
+--  Check three roulette bets against the a spin of a
+--  roulette wheel to see which bets win.
 --
 ---------------------------------------------------------------
 
@@ -29,6 +24,41 @@ END win;
 
 
 ARCHITECTURE behavioural OF win IS
+-- Store the dozen in which the result lies.
+signal spin_result_dozen : unsigned(1 downto 0);
 BEGIN
---  Your code goes here
+	-- Check for wins on bet 1 (straight-up).
+	process(bet1_value)
+	begin
+		if (bet1_value = spin_result_latched) then
+			bet1_wins <= '1';
+		else
+			bet1_wins <= '0';
+		end if;
+	end process;
+	
+	-- Check for wins on bet 3 (dozen).
+	process(bet3_dozen)
+	begin
+		-- Determine which dozen contains the result.
+		if (spin_result_latched < 24) then
+			if (spin_result_latched < 12) then
+				if (spin_result_latched > 0) then
+					spin_result_dozen <= "00";
+				end if;
+			else
+				spin_result_dozen <= "01";
+			end if;
+		else
+			spin_result_dozen <= "10";
+		end if;
+		
+		if (bet3_dozen = spin_result_dozen) then
+			bet3_wins <= '1';
+		else
+			bet3_wins <= '0';
+		end if;
+		
+	end process;
+	
 END;

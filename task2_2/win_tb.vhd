@@ -113,6 +113,7 @@ begin
       bet1_value <= to_unsigned(0, bet1_value'length);
       bet2_colour <= '0';
       bet3_dozen <= to_unsigned(0, bet3_dozen'length);
+      wait for 1 ns;
 
       -- Loop through each element in our test case array.  Each element represents
       -- one test case (along with expected outputs).

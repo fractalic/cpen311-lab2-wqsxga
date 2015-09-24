@@ -25,13 +25,12 @@ END win;
 
 ARCHITECTURE behavioural OF win IS
 -- The dozen in which the result lies.
-signal spin_result_dozen : unsigned(1 downto 0);
+signal spin_result_dozen : unsigned(1 downto 0) := "00";
 -- The quadrant range of the result
 -- determines red-black even-odd pairing.
-signal spin_result_color_order : std_logic;
+signal spin_result_color_order : std_logic := '0';
 BEGIN
 	-- Check for wins on bet 1 (straight-up).
-	-- TODO: check logic.
 	process(bet1_value, spin_result_latched)
 	begin
 		if (bet1_value = spin_result_latched) then
